@@ -68,9 +68,9 @@ const Index = () => {
           </nav>
           <div className="flex items-center gap-3">
             <SecurityBadge />
-            <Button size="sm">
-              Accéder à la plateforme
-            </Button>
+            <Link to="/store">
+              <Button size="sm">Voir la boutique</Button>
+            </Link>
           </div>
         </div>
       </header>
