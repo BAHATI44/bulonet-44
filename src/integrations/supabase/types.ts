@@ -14,16 +14,352 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      currencies: {
+        Row: {
+          code: string
+          exchange_rate_to_usd: number
+          id: string
+          is_active: boolean
+          name: string
+          symbol: string
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          exchange_rate_to_usd?: number
+          id?: string
+          is_active?: boolean
+          name: string
+          symbol: string
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          exchange_rate_to_usd?: number
+          id?: string
+          is_active?: boolean
+          name?: string
+          symbol?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      market_currencies: {
+        Row: {
+          currency_id: string
+          id: string
+          is_default: boolean
+          market_id: string
+        }
+        Insert: {
+          currency_id: string
+          id?: string
+          is_default?: boolean
+          market_id: string
+        }
+        Update: {
+          currency_id?: string
+          id?: string
+          is_default?: boolean
+          market_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "market_currencies_currency_id_fkey"
+            columns: ["currency_id"]
+            isOneToOne: false
+            referencedRelation: "currencies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "market_currencies_market_id_fkey"
+            columns: ["market_id"]
+            isOneToOne: false
+            referencedRelation: "markets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      markets: {
+        Row: {
+          country_code: string
+          created_at: string
+          default_language: string
+          flag_emoji: string | null
+          id: string
+          is_active: boolean
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          country_code: string
+          created_at?: string
+          default_language?: string
+          flag_emoji?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          country_code?: string
+          created_at?: string
+          default_language?: string
+          flag_emoji?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      order_items: {
+        Row: {
+          id: string
+          order_id: string
+          product_id: string
+          quantity: number
+          total_price: number
+          unit_price: number
+        }
+        Insert: {
+          id?: string
+          order_id: string
+          product_id: string
+          quantity?: number
+          total_price: number
+          unit_price: number
+        }
+        Update: {
+          id?: string
+          order_id?: string
+          product_id?: string
+          quantity?: number
+          total_price?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          created_at: string
+          currency_code: string
+          id: string
+          market_id: string | null
+          order_number: string
+          payment_method: string | null
+          shipping_address: Json | null
+          status: Database["public"]["Enums"]["order_status"]
+          total_amount: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          currency_code: string
+          id?: string
+          market_id?: string | null
+          order_number: string
+          payment_method?: string | null
+          shipping_address?: Json | null
+          status?: Database["public"]["Enums"]["order_status"]
+          total_amount: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          currency_code?: string
+          id?: string
+          market_id?: string | null
+          order_number?: string
+          payment_method?: string | null
+          shipping_address?: Json | null
+          status?: Database["public"]["Enums"]["order_status"]
+          total_amount?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_market_id_fkey"
+            columns: ["market_id"]
+            isOneToOne: false
+            referencedRelation: "markets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_markets: {
+        Row: {
+          currency_code: string | null
+          id: string
+          is_available: boolean
+          local_price: number | null
+          market_id: string
+          product_id: string
+        }
+        Insert: {
+          currency_code?: string | null
+          id?: string
+          is_available?: boolean
+          local_price?: number | null
+          market_id: string
+          product_id: string
+        }
+        Update: {
+          currency_code?: string | null
+          id?: string
+          is_available?: boolean
+          local_price?: number | null
+          market_id?: string
+          product_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_markets_market_id_fkey"
+            columns: ["market_id"]
+            isOneToOne: false
+            referencedRelation: "markets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_markets_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          base_price: number
+          created_at: string
+          created_by: string | null
+          currency_code: string
+          description: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean
+          name: string
+          sku: string | null
+          stock_quantity: number
+          updated_at: string
+        }
+        Insert: {
+          base_price: number
+          created_at?: string
+          created_by?: string | null
+          currency_code?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name: string
+          sku?: string | null
+          stock_quantity?: number
+          updated_at?: string
+        }
+        Update: {
+          base_price?: number
+          created_at?: string
+          created_by?: string | null
+          currency_code?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name?: string
+          sku?: string | null
+          stock_quantity?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
+      order_status:
+        | "pending"
+        | "confirmed"
+        | "processing"
+        | "shipped"
+        | "delivered"
+        | "cancelled"
+        | "refunded"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +486,17 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+      order_status: [
+        "pending",
+        "confirmed",
+        "processing",
+        "shipped",
+        "delivered",
+        "cancelled",
+        "refunded",
+      ],
+    },
   },
 } as const
