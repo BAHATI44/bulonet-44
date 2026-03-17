@@ -87,13 +87,17 @@ const Index = () => {
               Plateforme e-commerce multi-marchés avec devises locales, paiements mobiles africains et sécurité de niveau bancaire.
             </p>
             <div className="flex flex-wrap items-center gap-4">
-              <Button size="lg" className="gap-2">
-                Démarrer maintenant
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-              <Button variant="outline" size="lg">
-                Documentation
-              </Button>
+              <Link to="/store">
+                <Button size="lg" className="gap-2">
+                  Voir le catalogue
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
+              <Link to="/admin/login">
+                <Button variant="outline" size="lg">
+                  Admin
+                </Button>
+              </Link>
             </div>
             <div className="mt-8 flex items-center gap-6 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
