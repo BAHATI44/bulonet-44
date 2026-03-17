@@ -8,6 +8,7 @@ import { StoreProvider } from "@/hooks/useStore";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import LoginPage from "./pages/admin/LoginPage.tsx";
+import ImportPage from "./pages/admin/ImportPage.tsx";
 import DashboardPage from "./pages/admin/DashboardPage.tsx";
 import ProductsPage from "./pages/admin/ProductsPage.tsx";
 import MarketsPage from "./pages/admin/MarketsPage.tsx";
@@ -37,6 +38,7 @@ const App = () => (
               <Route path="/admin/login" element={<LoginPage />} />
               <Route path="/admin" element={<DashboardPage />} />
               <Route path="/admin/products" element={<ProductsPage />} />
+              <Route path="/admin/import" element={<ImportPage />} />
               <Route path="/admin/markets" element={<MarketsPage />} />
               <Route path="/admin/currencies" element={<CurrenciesPage />} />
               <Route path="/admin/orders" element={<OrdersPage />} />
