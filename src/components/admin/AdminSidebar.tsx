@@ -4,6 +4,7 @@ import {
   Globe,
   Coins,
   ShoppingCart,
+  Download,
   LogOut,
   Zap,
 } from "lucide-react";
