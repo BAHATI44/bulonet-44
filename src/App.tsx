@@ -8,6 +8,7 @@ import { StoreProvider } from "@/hooks/useStore";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import LoginPage from "./pages/admin/LoginPage.tsx";
+import ImportPage from "./pages/admin/ImportPage.tsx";
 import DashboardPage from "./pages/admin/DashboardPage.tsx";
 import ProductsPage from "./pages/admin/ProductsPage.tsx";
 import MarketsPage from "./pages/admin/MarketsPage.tsx";
