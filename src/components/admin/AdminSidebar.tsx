@@ -28,6 +28,7 @@ import { Button } from "@/components/ui/button";
 const navItems = [
   { title: "Tableau de bord", url: "/admin", icon: LayoutDashboard },
   { title: "Produits", url: "/admin/products", icon: Package },
+  { title: "Import", url: "/admin/import", icon: Download },
   { title: "Marchés", url: "/admin/markets", icon: Globe },
   { title: "Devises", url: "/admin/currencies", icon: Coins },
   { title: "Commandes", url: "/admin/orders", icon: ShoppingCart },
