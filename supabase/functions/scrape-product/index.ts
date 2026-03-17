@@ -82,7 +82,7 @@ Deno.serve(async (req) => {
     }
 
     // Extract product data from response
-    const jsonData = data.data?.json || data.json || {};
+    const jsonData = data.data?.extract || data.extract || data.data?.json || data.json || {};
     const screenshot = data.data?.screenshot || data.screenshot;
     const metadata = data.data?.metadata || data.metadata || {};
 
