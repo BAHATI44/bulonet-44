@@ -47,29 +47,25 @@ Deno.serve(async (req) => {
       },
       body: JSON.stringify({
         url: formattedUrl,
-        formats: [
-          'markdown',
-          {
-            type: 'json',
-            prompt: 'Extract the product information from this e-commerce page. Get the product name/title, description, price (as a number without currency symbol), currency (3-letter code like USD, EUR, CNY), all image URLs you can find, the SKU or product ID, any available stock/quantity info, product specifications/features as a list, and the product category.',
-            schema: {
-              type: 'object',
-              properties: {
-                title: { type: 'string', description: 'Product name/title' },
-                description: { type: 'string', description: 'Product description' },
-                price: { type: 'number', description: 'Price as a number' },
-                currency: { type: 'string', description: '3-letter currency code' },
-                images: { type: 'array', items: { type: 'string' }, description: 'Image URLs' },
-                sku: { type: 'string', description: 'Product SKU or ID' },
-                stock: { type: 'number', description: 'Available stock quantity' },
-                specifications: { type: 'array', items: { type: 'string' }, description: 'Product features/specs' },
-                category: { type: 'string', description: 'Product category' },
-              },
-              required: ['title', 'price'],
+        formats: ['markdown', 'extract', 'screenshot'],
+        extract: {
+          prompt: 'Extract the product information from this e-commerce page. Get the product name/title, description, price (as a number without currency symbol), currency (3-letter code like USD, EUR, CNY), all image URLs you can find, the SKU or product ID, any available stock/quantity info, product specifications/features as a list, and the product category.',
+          schema: {
+            type: 'object',
+            properties: {
+              title: { type: 'string' },
+              description: { type: 'string' },
+              price: { type: 'number' },
+              currency: { type: 'string' },
+              images: { type: 'array', items: { type: 'string' } },
+              sku: { type: 'string' },
+              stock: { type: 'number' },
+              specifications: { type: 'array', items: { type: 'string' } },
+              category: { type: 'string' },
             },
+            required: ['title', 'price'],
           },
-          'screenshot',
-        ],
+        },
         onlyMainContent: true,
         waitFor: 3000,
       }),
