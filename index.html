@@ -1,52 +1,135 @@
 <!doctype html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BULONET — Commerce International Sécurisé</title>
-    <meta name="description" content="Plateforme e-commerce multi-marchés avec devises locales, paiements mobiles africains et sécurité bancaire. Achetez et vendez partout dans le monde.">
-    <meta name="author" content="BULONET" />
-    <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://bulonet.lovable.app" />
+<head>
+  <!-- ========================= -->
+  <!-- ⚙️ CONFIGURATION DE BASE -->
+  <!-- ========================= -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
-    <!-- Security headers via meta -->
-    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <meta http-equiv="X-Frame-Options" content="DENY" />
-    <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
-    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
-    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(self), payment=(self)" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.firecrawl.dev; frame-ancestors 'none'; base-uri 'self'; form-action 'self';" />
+  <title>BULONET — Commerce International Sécurisé</title>
 
-    <!-- OG -->
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="BULONET — Commerce International Sécurisé" />
-    <meta property="og:description" content="Plateforme e-commerce multi-marchés avec devises locales, paiements mobiles africains et sécurité bancaire." />
-    <meta property="og:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a2915dc7-ea8d-4e20-8701-ebb0c751f55a/id-preview-5d7d2efb--d7b3b3e0-bf94-43a6-8ea3-638afe89e78d.lovable.app-1773728008236.png">
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@BULONET" />
-    <meta name="twitter:title" content="BULONET — Commerce International Sécurisé" />
-    <meta name="twitter:description" content="Plateforme e-commerce multi-marchés avec devises locales et paiements mobiles africains." />
-    <meta name="twitter:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a2915dc7-ea8d-4e20-8701-ebb0c751f55a/id-preview-5d7d2efb--d7b3b3e0-bf94-43a6-8ea3-638afe89e78d.lovable.app-1773728008236.png">
+  <!-- SEO -->
+  <meta name="description" content="Plateforme e-commerce internationale avec paiements mobiles africains et sécurité avancée." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://bulonet.com" />
 
-    <!-- JSON-LD -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "BULONET",
-      "url": "https://bulonet.lovable.app",
-      "description": "Plateforme e-commerce multi-marchés avec devises locales et paiements mobiles africains.",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://bulonet.lovable.app/store?q={search_term_string}",
-        "query-input": "required name=search_term_string"
+  <!-- ========================= -->
+  <!-- 🚀 PERFORMANCE -->
+  <!-- ========================= -->
+  <!-- Préchargement du JS principal -->
+  <link rel="modulepreload" href="/src/main.tsx" />
+
+  <!-- Fonts optimisées -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- ========================= -->
+  <!-- 🔐 SÉCURITÉ (CSP avancé) -->
+  <!-- ========================= -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="DENY" />
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+
+  <!-- ⚠️ Version sécurisée CSP -->
+  <meta http-equiv="Content-Security-Policy"
+    content="
+    default-src 'self';
+    script-src 'self';
+    style-src 'self' https://fonts.googleapis.com;
+    font-src https://fonts.gstatic.com;
+    img-src 'self' data: https:;
+    connect-src 'self' https://*.supabase.co wss://*.supabase.co;
+    frame-ancestors 'none';
+    base-uri 'self';
+    form-action 'self';
+  " />
+
+  <!-- ========================= -->
+  <!-- 📱 MOBILE & UX -->
+  <!-- ========================= -->
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="mobile-web-app-capable" content="yes" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+
+  <!-- ========================= -->
+  <!-- 🌍 SOCIAL (OG + Twitter) -->
+  <!-- ========================= -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="BULONET — Commerce sécurisé mondial" />
+  <meta property="og:description" content="Achetez et vendez à l'international avec des paiements adaptés à l'Afrique." />
+  <meta property="og:image" content="/preview.png" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- ========================= -->
+  <!-- 🧠 STRUCTURED DATA (SEO) -->
+  <!-- ========================= -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "BULONET",
+    "url": "https://bulonet.com",
+    "logo": "https://bulonet.com/logo.png",
+    "sameAs": [
+      "https://twitter.com/BULONET"
+    ]
+  }
+  </script>
+
+</head>
+
+<body>
+
+  <!-- ========================= -->
+  <!-- ⚠️ NO JS FALLBACK -->
+  <!-- ========================= -->
+  <noscript>
+    🚫 JavaScript est requis pour utiliser BULONET.
+  </noscript>
+
+  <!-- ========================= -->
+  <!-- ⚡ LOADER UX (AVANCÉ) -->
+  <!-- ========================= -->
+  <div id="loader">
+    <style>
+      #loader {
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        height:100vh;
+        font-family:sans-serif;
+        background:#0f172a;
+        color:white;
       }
-    }
-    </script>
-  </head>
-  <body>
-    <noscript>Vous devez activer JavaScript pour utiliser BULONET.</noscript>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+    </style>
+    ⏳ Chargement sécurisé BULONET...
+  </div>
+
+  <!-- ========================= -->
+  <!-- ⚛️ ROOT REACT -->
+  <!-- ========================= -->
+  <div id="root"></div>
+
+  <!-- ========================= -->
+  <!-- 🚀 SCRIPT PRINCIPAL -->
+  <!-- ========================= -->
+  <script type="module" src="/src/main.tsx"></script>
+
+  <!-- ========================= -->
+  <!-- 🧠 SCRIPT UX (OPTIONNEL) -->
+  <!-- ========================= -->
+  <script>
+    // 🔥 Supprime loader après chargement React
+    window.addEventListener("load", () => {
+      const loader = document.getElementById("loader");
+      if(loader) loader.style.display = "none";
+    });
+  </script>
+
+</body>
+    </html>
