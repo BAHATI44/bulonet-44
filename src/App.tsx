@@ -17,6 +17,7 @@ import OrdersPage from "./pages/admin/OrdersPage.tsx";
 import StoreCatalog from "./pages/store/StoreCatalog.tsx";
 import CartPage from "./pages/store/CartPage.tsx";
 import CheckoutPage from "./pages/store/CheckoutPage.tsx";
+import ProductDetailPage from "./pages/store/ProductDetailPage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ const App = () => (
               <Route path="/" element={<Index />} />
               {/* Store */}
               <Route path="/store" element={<StoreCatalog />} />
+              <Route path="/store/product/:id" element={<ProductDetailPage />} />
               <Route path="/store/cart" element={<CartPage />} />
               <Route path="/store/checkout" element={<CheckoutPage />} />
               {/* Admin */}

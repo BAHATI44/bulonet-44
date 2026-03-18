@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useStore } from "@/hooks/useStore";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 interface StoreProductCardProps {
@@ -16,8 +17,10 @@ interface StoreProductCardProps {
 
 const StoreProductCard = ({ id, name, description, basePrice, imageUrl, stockQuantity, index }: StoreProductCardProps) => {
   const { formatPrice, addToCart } = useStore();
+  const navigate = useNavigate();
 
-  const handleAdd = () => {
+  const handleAdd = (e: React.MouseEvent) => {
+    e.stopPropagation();
     addToCart({ productId: id, name, imageUrl, basePriceUsd: basePrice });
     toast.success(`${name} ajouté au panier`);
   };
@@ -28,35 +31,22 @@ const StoreProductCard = ({ id, name, description, basePrice, imageUrl, stockQua
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05, duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
       whileHover={{ y: -2 }}
-      className="group rounded-lg bg-card shadow-soft transition-shadow duration-300 hover:shadow-elevated overflow-hidden"
+      className="group cursor-pointer rounded-lg bg-card shadow-soft transition-shadow duration-300 hover:shadow-elevated overflow-hidden"
+      onClick={() => navigate(`/store/product/${id}`)}
     >
       <div className="aspect-square overflow-hidden bg-secondary">
         {imageUrl ? (
-          <img
-            src={imageUrl}
-            alt={name}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-            loading="lazy"
-          />
+          <img src={imageUrl} alt={name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
         ) : (
-          <div className="flex h-full items-center justify-center text-muted-foreground">
-            <ShoppingCart className="h-10 w-10" />
-          </div>
+          <div className="flex h-full items-center justify-center text-muted-foreground"><ShoppingCart className="h-10 w-10" /></div>
         )}
       </div>
       <div className="p-4">
         <h3 className="mb-1 text-sm font-semibold text-card-foreground line-clamp-1">{name}</h3>
-        {description && (
-          <p className="mb-3 text-xs text-muted-foreground line-clamp-2">{description}</p>
-        )}
+        {description && <p className="mb-3 text-xs text-muted-foreground line-clamp-2">{description}</p>}
         <div className="flex items-center justify-between">
           <span className="text-base font-bold tabular-nums text-foreground">{formatPrice(basePrice)}</span>
-          <Button
-            size="sm"
-            onClick={handleAdd}
-            disabled={stockQuantity === 0}
-            className="h-8 gap-1 text-xs"
-          >
+          <Button size="sm" onClick={handleAdd} disabled={stockQuantity === 0} className="h-8 gap-1 text-xs">
             <ShoppingCart className="h-3.5 w-3.5" />
             {stockQuantity === 0 ? "Épuisé" : "Ajouter"}
           </Button>
