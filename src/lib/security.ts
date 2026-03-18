@@ -116,7 +116,7 @@ export const preventFraming = () => {
     // Allow lovable preview frames
     try {
       if (!document.referrer.includes('lovable.app') && !document.referrer.includes('localhost')) {
-        window.top!.location = window.self.location;
+        window.top!.location.href = window.self.location.href;
       }
     } catch {
       // Cross-origin - can't access top, which means we're framed by external site
