@@ -14,6 +14,7 @@ import ProductsPage from "./pages/admin/ProductsPage.tsx";
 import MarketsPage from "./pages/admin/MarketsPage.tsx";
 import CurrenciesPage from "./pages/admin/CurrenciesPage.tsx";
 import OrdersPage from "./pages/admin/OrdersPage.tsx";
+import AIAgentsPage from "./pages/admin/AIAgentsPage.tsx";
 import StoreCatalog from "./pages/store/StoreCatalog.tsx";
 import CartPage from "./pages/store/CartPage.tsx";
 import CheckoutPage from "./pages/store/CheckoutPage.tsx";
