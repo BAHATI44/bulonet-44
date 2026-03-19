@@ -66,6 +66,116 @@
     --card-foreground: 220 16% 93%;
 
     --popover: 224 45% 9%;
+/* ======================================================
+ * Fichier     : src/index.css
+ * Projet      : Bulonet 🚀
+ * Description : Styles globaux du projet – extension de Tailwind
+ *               avec thème clair/sombre, utilitaires avancés,
+ *               animations, accessibilité et personnalisations.
+ * ====================================================== */
+
+/* 1. IMPORT DES FONTS – Typographie moderne et lisible */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* 2. TAILWIND – Directives de base */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ======================================================
+ * 3. COUCHES DE STYLE PERSONNALISÉES
+ * ====================================================== */
+
+/* 🌐 VARIABLES CSS (thème clair) – Doivent être synchronisées avec le fichier tailwind.config.js */
+@layer base {
+  :root {
+    /* Typographie */
+    --font-sans: 'DM Sans', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
+
+    /* Couleurs de base */
+    --background: 220 16% 97%;
+    --foreground: 224 50% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 224 50% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 50% 10%;
+
+    --primary: 230 72% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 16% 93%;
+    --secondary-foreground: 224 50% 10%;
+
+    --muted: 220 16% 93%;
+    --muted-foreground: 220 12% 46%;
+
+    --accent: 160 60% 42%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 56%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Bordures et anneaux */
+    --border: 220 16% 89%;
+    --input: 220 16% 89%;
+    --ring: 230 72% 50%;
+
+    /* Rayons */
+    --radius: 0.75rem;
+
+    /* Ombres – cohérentes avec les design tokens */
+    --shadow-soft: 0 1px 3px 0 rgba(0,0,0,0.06), 0 1px 2px -1px rgba(0,0,0,0.06);
+    --shadow-elevated: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05), 0 0 0 1px rgba(0,0,0,0.03);
+    --shadow-focus: 0 0 0 2px hsl(230 72% 50% / 0.2);
+
+    /* États supplémentaires */
+    --success: 160 60% 42%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    /* Sidebar – design cohérent avec le reste */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 224 50% 20%;
+    --sidebar-primary: 230 72% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 16% 93%;
+    --sidebar-accent-foreground: 224 50% 10%;
+    --sidebar-border: 220 16% 89%;
+    --sidebar-ring: 230 72% 50%;
+
+    /* 🧩 Extensions : z-index, animations, etc. */
+    --z-dropdown: 100;
+    --z-sticky: 200;
+    --z-fixed: 300;
+    --z-modal-backdrop: 400;
+    --z-modal: 450;
+    --z-popover: 500;
+    --z-tooltip: 600;
+    --z-toast: 700;
+
+    --duration-fast: 150ms;
+    --duration-base: 250ms;
+    --duration-slow: 350ms;
+
+    --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  /* 🌙 THÈME SOMBRE – Activé par la classe "dark" sur l'élément html */
+  .dark {
+    --background: 224 50% 6%;
+    --foreground: 220 16% 93%;
+
+    --card: 224 45% 9%;
+    --card-foreground: 220 16% 93%;
+
+    --popover: 224 45% 9%;
     --popover-foreground: 220 16% 93%;
 
     --primary: 230 72% 58%;
@@ -87,6 +197,10 @@
     --input: 224 30% 16%;
     --ring: 230 72% 58%;
 
+    --shadow-soft: 0 1px 3px 0 rgba(0,0,0,0.3), 0 1px 2px -1px rgba(0,0,0,0.3);
+    --shadow-elevated: 0 4px 6px -1px rgba(0,0,0,0.4), 0 2px 4px -2px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.03);
+    --shadow-focus: 0 0 0 2px hsl(230 72% 58% / 0.3);
+
     --sidebar-background: 224 50% 6%;
     --sidebar-foreground: 220 16% 93%;
     --sidebar-primary: 230 72% 58%;
@@ -96,40 +210,147 @@
     --sidebar-border: 224 30% 16%;
     --sidebar-ring: 230 72% 58%;
   }
-}
 
-@layer base {
+  /* ====================================================
+   * 4. STYLES DE BASE (éléments HTML)
+   * ==================================================== */
   * {
     @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Améliore la lecture sur mobile */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-sans);
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11"; /* alternatives typographiques */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    line-height: 1.5;
+    min-height: 100vh;
   }
 
-  .font-mono {
-    font-family: var(--font-mono);
-    font-variant-numeric: tabular-nums;
-  }
-
-  /* Smooth scrolling */
-  html {
-    scroll-behavior: smooth;
-  }
-
-  /* Better focus styles */
+  /* ✅ Améliorations d'accessibilité */
   :focus-visible {
     outline: none;
     box-shadow: var(--shadow-focus);
     border-radius: calc(var(--radius) - 4px);
   }
+
+  /* Pour les utilisateurs qui préfèrent moins d'animations */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* 🖨️ Styles d'impression */
+  @media print {
+    .no-print {
+      display: none !important;
+    }
+    body {
+      background: white;
+      color: black;
+    }
+  }
+
+  /* 🔍 Style de la sélection de texte */
+  ::selection {
+    background: hsl(var(--primary) / 0.2);
+    color: hsl(var(--primary));
+  }
+
+  /* Barre de défilement personnalisée (WebKit) */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.5);
+  }
+
+  /* 🧑‍💻 Typographie monospace */
+  .font-mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
 }
 
+/* ====================================================
+ * 5. COMPOSANTS RÉUTILISABLES (couche @components)
+ * ==================================================== */
+@layer components {
+  /* Effet glassmorphisme */
+  .glass {
+    background: hsl(var(--card) / 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid hsl(var(--border) / 0.2);
+  }
+
+  /* Cartes avec ombres standardisées */
+  .card-base {
+    background: hsl(var(--card));
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+    transition: box-shadow var(--duration-fast) var(--ease-default);
+  }
+  .card-base:hover {
+    box-shadow: var(--shadow-elevated);
+  }
+
+  /* Boutons de base (peut être enrichi) */
+  .btn-primary {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    font-weight: 500;
+    transition: background-color var(--duration-fast) var(--ease-default);
+  }
+  .btn-primary:hover {
+    background: hsl(var(--primary) / 0.9);
+  }
+
+  /* Badges pour statuts */
+  .badge-success {
+    background: hsl(var(--success) / 0.15);
+    color: hsl(var(--success));
+    border: 1px solid hsl(var(--success) / 0.3);
+  }
+  .badge-warning {
+    background: hsl(var(--warning) / 0.15);
+    color: hsl(var(--warning));
+    border: 1px solid hsl(var(--warning) / 0.3);
+  }
+  .badge-destructive {
+    background: hsl(var(--destructive) / 0.15);
+    color: hsl(var(--destructive));
+    border: 1px solid hsl(var(--destructive) / 0.3);
+  }
+}
+
+/* ====================================================
+ * 6. UTILITAIRES AVANCÉS (couche @utilities)
+ * ==================================================== */
 @layer utilities {
+  /* Ombres personnalisées */
   .shadow-soft {
     box-shadow: var(--shadow-soft);
   }
@@ -139,22 +360,110 @@
   .shadow-focus-ring {
     box-shadow: var(--shadow-focus);
   }
+
+  /* Chiffres tabulaires */
   .tabular-nums {
     font-variant-numeric: tabular-nums;
   }
 
-  /* Glass effect */
-  .glass {
-    background: hsl(var(--card) / 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-  }
-
-  /* Gradient text */
+  /* Dégradé de texte */
   .gradient-text {
     background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
+
+  /* Équilibrage du texte (expérimental) */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Masquer la barre de défilement tout en gardant la fonctionnalité */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Animations personnalisées (à utiliser avec animate-*) */
+  .animate-fade-in {
+    animation: fadeIn var(--duration-base) var(--ease-out);
+  }
+  .animate-slide-up {
+    animation: slideUp var(--duration-base) var(--ease-out);
+  }
+  .animate-slide-down {
+    animation: slideDown var(--duration-base) var(--ease-out);
+  }
+  .animate-scale-in {
+    animation: scaleIn var(--duration-base) var(--ease-bounce);
+  }
+
+  /* 🔄 Keyframes pour les animations */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slideUp {
+    from { transform: translateY(10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes slideDown {
+    from { transform: translateY(-10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes scaleIn {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  /* Utilitaires pour z-index (basés sur les variables) */
+  .z-dropdown { z-index: var(--z-dropdown); }
+  .z-sticky { z-index: var(--z-sticky); }
+  .z-fixed { z-index: var(--z-fixed); }
+  .z-modal { z-index: var(--z-modal); }
+  .z-popover { z-index: var(--z-popover); }
+  .z-tooltip { z-index: var(--z-tooltip); }
+  .z-toast { z-index: var(--z-toast); }
+
+  /* Aide au débogage (à utiliser en développement) */
+  .debug {
+    outline: 2px solid red;
+    background: rgba(255,0,0,0.1);
+  }
 }
+
+/* ====================================================
+ * 7. INTÉGRATION AVEC LES AGENTS IA (exemple)
+ *    – Ces classes peuvent être utilisées dynamiquement
+ *      par les agents pour modifier l'apparence.
+ * ==================================================== */
+.agent-highlight {
+  outline: 2px solid hsl(var(--accent));
+  transition: outline 0.2s;
+}
+.agent-suggestion {
+  background: hsl(var(--accent) / 0.1);
+  border-left: 4px solid hsl(var(--accent));
+}
+
+/* ====================================================
+ * 💡 CONSEILS & ORIENTATIONS
+ * ====================================================
+ * 1. Ce fichier doit être importé dans le point d'entrée principal (main.tsx)
+ * 2. Assure-toi que les variables CSS correspondent exactement à celles
+ *    utilisées dans tailwind.config.js (via `theme.extend.colors`).
+ * 3. Pour ajouter de nouvelles couleurs, définis-les d'abord ici, puis
+ *    dans la config Tailwind pour pouvoir utiliser des classes comme `bg-primary`.
+ * 4. Le thème sombre s'active en ajoutant la classe "dark" sur l'élément <html>.
+ *    Tu peux le faire via un script (ex: détection du système, bouton de toggle).
+ * 5. Les animations et utilitaires sont prêts à l'emploi ; ils peuvent être
+ *    utilisés directement dans les composants React avec className.
+ * 6. Pense à tester l'accessibilité (contrastes, réduction de mouvement).
+ * 7. N'hésite pas à scinder ce fichier si la base de code grossit,
+ *    par exemple en créant des fichiers séparés pour les thèmes, les animations,
+ *    puis à les importer ici avec @import.
+ * ==================================================== */
