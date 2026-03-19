@@ -1,23 +1,61 @@
+/* ======================================================
+ * Fichier     : src/pages/Index.module.css (ou src/App.css)
+ * Projet      : Bulonet 🚀
+ * Description : Styles spécifiques à la page d'accueil (Index)
+ *               ou à l'ensemble de l'application (si utilisé globalement).
+ *               Ce fichier contient des animations, des mises en page
+ *               responsives, des effets de survol et des optimisations
+ *               d'accessibilité.
+ * ====================================================== */
+
+/* 🌍 Conteneur principal de la racine – peut être adapté selon le layout */
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+
+  /* ✅ Ajout de variables locales pour la cohérence */
+  --logo-size: 6em;
+  --logo-padding: 1.5em;
+  --transition-default: 300ms ease-in-out;
+  --color-primary: #646cff;
+  --color-react: #61dafb;
+  --color-text-light: #888;
+  --color-text-dark: #333;
+  --shadow-hover: 0 0 2em;
 }
 
+/* ====================================================
+ * 🖼️ STYLES POUR LE LOGO
+ * ==================================================== */
 .logo {
-  height: 6em;
-  padding: 1.5em;
+  height: var(--logo-size);
+  padding: var(--logo-padding);
   will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  transition: filter var(--transition-default);
+
+  /* ✅ Amélioration de l'accessibilité : focus visible */
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 4px;
+    border-radius: 8px;
+  }
 }
 
+/* Effet de survol générique */
+.logo:hover {
+  filter: drop-shadow(0 0 2em var(--color-primary));
+}
+
+/* Effet spécifique pour le logo React */
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em var(--color-react));
+}
+
+/* ====================================================
+ * 🌀 ANIMATION DE ROTATION (conditionnelle)
+ * ==================================================== */
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -27,16 +65,124 @@
   }
 }
 
+/* Applique l'animation seulement si l'utilisateur n'a pas de préférence de mouvement réduit */
 @media (prefers-reduced-motion: no-preference) {
+  /* Cible le deuxième lien (souvent le logo React dans le template) */
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
   }
+
+  /* ✅ Variante pour une animation plus douce sur d'autres éléments */
+  .logo-spin-slow {
+    animation: logo-spin infinite 30s linear;
+  }
 }
 
+/* ====================================================
+ * 📦 STYLES DE CARTE
+ * ==================================================== */
 .card {
   padding: 2em;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  transition: transform var(--transition-default), box-shadow var(--transition-default);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+  }
 }
 
+/* ====================================================
+ * 📝 TEXTE DE DOCUMENTATION
+ * ==================================================== */
 .read-the-docs {
-  color: #888;
+  color: var(--color-text-light);
+  font-size: 0.9em;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 2rem auto;
+
+  /* ✅ Style pour le mode sombre (si activé via la classe .dark sur html) */
+  :global(.dark) & {
+    color: #aaa;
+  }
 }
+
+/* ====================================================
+ * 📱 ADAPTATIONS RESPONSIVES
+ * ==================================================== */
+@media (max-width: 768px) {
+  #root {
+    padding: 1rem;
+  }
+
+  .logo {
+    height: calc(var(--logo-size) * 0.8);
+    padding: calc(var(--logo-padding) * 0.8);
+  }
+
+  .card {
+    padding: 1.5em;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo {
+    height: calc(var(--logo-size) * 0.6);
+    padding: calc(var(--logo-padding) * 0.6);
+  }
+
+  .card {
+    padding: 1em;
+  }
+}
+
+/* ====================================================
+ * ♿ ACCESSIBILITÉ – Style pour le focus global
+ * ==================================================== */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Masquer les animations si l'utilisateur préfère les réduire */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ====================================================
+ * 🧩 UTILITAIRES SUPPLÉMENTAIRES (optionnels)
+ * ==================================================== */
+.text-balance {
+  text-wrap: balance;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-react));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ====================================================
+ * 💡 CONSEILS & ORIENTATIONS
+ * ====================================================
+ * 1. Ce fichier peut être utilisé comme feuille de styles pour la page d'accueil.
+ *    Si tu utilises CSS Modules (recommandé), importe-le dans `Index.tsx` :
+ *        import styles from './Index.module.css';
+ *        <div className={styles.root}>...</div>
+ * 2. Les variables CSS locales permettent de centraliser les valeurs.
+ * 3. Les sélecteurs `:global(.dark)` permettent de réagir au thème sombre global.
+ * 4. Les animations sont conditionnées par `prefers-reduced-motion` pour respecter
+ *    les préférences des utilisateurs.
+ * 5. Pense à tester sur mobile et à ajuster les breakpoints si nécessaire.
+ * 6. Si ce fichier est destiné à être global, renomme-le en `global.css` et
+ *    importe-le dans `main.tsx`. Sinon, garde-le spécifique à un composant.
+ * ==================================================== */
