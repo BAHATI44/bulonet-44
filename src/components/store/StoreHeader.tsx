@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ShoppingCart, Globe, Zap, Menu, X, Shield, User } from "lucide-react";
+import { ShoppingCart, Globe, Zap, Menu, X, Shield, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useStore } from "@/hooks/useStore";
 import { useAuth } from "@/hooks/useAuth";
@@ -14,11 +14,11 @@ import {
 
 const StoreHeader = () => {
   const { cartCount, currency, setCurrencyCode, currencies, market, setMarketCode, markets } = useStore();
-  const { user, isAdmin } = useAuth();
+  const { user, isAdmin, signOut } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
+    <header className="sticky top-0 z-50 glass border-b border-border/50">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
         <Link to="/store" className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary shadow-sm">
@@ -28,15 +28,15 @@ const StoreHeader = () => {
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden items-center gap-2 md:flex">
-          <Link to="/" className="px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
+        <nav className="hidden items-center gap-1 md:flex">
+          <Link to="/" className="rounded-lg px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
             Accueil
           </Link>
-          <Link to="/store" className="px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <Link to="/store" className="rounded-lg px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
             Catalogue
           </Link>
           {isAdmin && (
-            <Link to="/admin" className="px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+            <Link to="/admin" className="rounded-lg px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors flex items-center gap-1">
               <Shield className="h-3.5 w-3.5" />
               Admin
             </Link>
@@ -77,9 +77,16 @@ const StoreHeader = () => {
             </SelectContent>
           </Select>
 
-          {/* Auth link */}
-          {!user && (
-            <Link to="/admin/login" className="hidden md:block">
+          {/* Auth */}
+          {user ? (
+            <Link to="/store/account">
+              <Button variant="ghost" size="sm" className="gap-1.5 text-xs hidden md:flex">
+                <User className="h-3.5 w-3.5" />
+                Mon compte
+              </Button>
+            </Link>
+          ) : (
+            <Link to="/store/auth" className="hidden md:block">
               <Button variant="ghost" size="sm" className="gap-1.5 text-xs">
                 <User className="h-3.5 w-3.5" />
                 Connexion
@@ -123,8 +130,22 @@ const StoreHeader = () => {
                 Administration
               </Link>
             )}
-            {!user && (
-              <Link to="/admin/login" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2.5 text-sm text-foreground hover:bg-secondary transition-colors flex items-center gap-2">
+            {user ? (
+              <>
+                <Link to="/store/account" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2.5 text-sm text-foreground hover:bg-secondary transition-colors flex items-center gap-2">
+                  <User className="h-4 w-4" />
+                  Mon compte
+                </Link>
+                <button
+                  onClick={async () => { await signOut(); setMobileOpen(false); }}
+                  className="rounded-lg px-3 py-2.5 text-sm text-foreground hover:bg-secondary transition-colors flex items-center gap-2 w-full text-left"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Déconnexion
+                </button>
+              </>
+            ) : (
+              <Link to="/store/auth" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2.5 text-sm text-foreground hover:bg-secondary transition-colors flex items-center gap-2">
                 <User className="h-4 w-4" />
                 Connexion
               </Link>
