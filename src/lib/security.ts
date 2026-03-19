@@ -1,19 +1,33 @@
-/**
- * BULONET Security Utilities
- * Input validation, sanitization, and security helpers
- */
+// ======================================================
+// Fichier     : src/lib/security.ts
+// Projet      : Bulonet 🚀
+// Description : Utilitaires de sécurité – validation,
+//               nettoyage, protection contre les attaques
+//               (XSS, injection, clickjacking, devtools),
+//               gestion de CSP, rate limiting client.
+// ======================================================
 
-// Sanitize string input - remove potential XSS vectors
+// ====================================================
+// 1. NETTOYAGE ET VALIDATION DES ENTRÉES
+// ====================================================
+
+/**
+ * 🧹 Nettoie une chaîne de caractères pour éliminer les risques XSS.
+ * Supprime les balises, protocoles dangereux et espaces superflus.
+ */
 export const sanitizeInput = (input: string): string => {
   return input
-    .replace(/[<>]/g, '') // Remove angle brackets
-    .replace(/javascript:/gi, '') // Remove javascript: protocol
-    .replace(/on\w+\s*=/gi, '') // Remove inline event handlers
-    .replace(/data:\s*text\/html/gi, '') // Remove data:text/html
+    .replace(/[<>]/g, '') // Supprime < et >
+    .replace(/javascript:/gi, '') // Supprime javascript:
+    .replace(/on\w+\s*=/gi, '') // Supprime les gestionnaires d'événements (onclick=...)
+    .replace(/data:\s*text\/html/gi, '') // Supprime data:text/html
     .trim();
 };
 
-// Sanitize URL - only allow http/https
+/**
+ * 🔗 Nettoie une URL – n'autorise que http et https.
+ * Retourne l'URL nettoyée ou null si invalide.
+ */
 export const sanitizeUrl = (url: string): string | null => {
   try {
     const parsed = new URL(url);
@@ -24,15 +38,137 @@ export const sanitizeUrl = (url: string): string | null => {
   }
 };
 
-// Rate limiter for client-side operations
+/**
+ * 📧 Valide le format d'un email (et la longueur).
+ */
+export const isValidEmail = (email: string): boolean => {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return emailRegex.test(email) && email.length <= 255;
+};
+
+/**
+ * 🕵️ Détecte les tentatives d'injection SQL ou script.
+ */
+export const detectInjection = (input: string): boolean => {
+  const patterns = [
+    /(<script[\s>])/i,
+    /(union\s+select)/i,
+    /(drop\s+table)/i,
+    /(insert\s+into)/i,
+    /(delete\s+from)/i,
+    /(--\s*$)/,
+    /(\/\*.*\*\/)/,
+    /(\b(eval|exec|execute)\s*\()/i,
+  ];
+  return patterns.some((p) => p.test(input));
+};
+
+// ====================================================
+// 2. PROTECTION CONTRE LE VOL DE DONNÉES / CLONAGE
+// ====================================================
+
+/**
+ * 🚫 Empêche le clic droit (protection contre le copier-coller rapide).
+ * À activer uniquement sur les pages sensibles.
+ */
+export const disableContextMenu = () => {
+  document.addEventListener('contextmenu', (e) => e.preventDefault());
+};
+
+/**
+ * 🚫 Empêche la sélection de texte (anti-copy).
+ */
+export const disableTextSelection = () => {
+  document.addEventListener('selectstart', (e) => e.preventDefault());
+};
+
+/**
+ * ⌨️ Bloque les raccourcis clavier dangereux (devtools, view source, etc.).
+ */
+export const disableDevShortcuts = () => {
+  document.addEventListener('keydown', (e) => {
+    // Empêche Ctrl+U (view source), Ctrl+S (save), Ctrl+Shift+I/J/C (devtools), F12
+    if (
+      (e.ctrlKey && e.key === 'u') ||
+      (e.ctrlKey && e.key === 's') ||
+      (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+      (e.ctrlKey && e.shiftKey && e.key === 'J') ||
+      (e.ctrlKey && e.shiftKey && e.key === 'C') ||
+      e.key === 'F12'
+    ) {
+      e.preventDefault();
+    }
+  });
+};
+
+// ====================================================
+// 3. ANTI-CLICKJACKING / PROTECTION IFRAME
+// ====================================================
+
+/**
+ * 🔒 Empêche l'affichage du site dans une iframe (sauf exceptions).
+ * Permet les previews lovable.app et localhost en développement.
+ */
+export const preventFraming = () => {
+  if (window.top !== window.self) {
+    // Autorise les previews lovable et localhost (pour le dev)
+    try {
+      const referrer = document.referrer || '';
+      if (!referrer.includes('lovable.app') && !referrer.includes('localhost')) {
+        window.top!.location.href = window.self.location.href; // Redirige la page parent
+      }
+    } catch {
+      // Cross-origin – impossible d'accéder à top, donc on est dans une iframe externe
+      // On peut afficher un message ou rediriger (mais on ne peut pas modifier top)
+    }
+  }
+};
+
+// ====================================================
+// 4. DÉTECTION DES OUTILS DE DÉVELOPPEMENT
+// ====================================================
+
+/**
+ * 🕵️ Détecte si les DevTools sont ouverts (via la différence de performance).
+ * @param callback Fonction appelée avec un booléen (true = ouvert)
+ */
+export const detectDevTools = (callback: (isOpen: boolean) => void): void => {
+  const threshold = 100; // ms
+  const check = () => {
+    const start = performance.now();
+    debugger; // Provoque un ralentissement si DevTools ouverts
+    const end = performance.now();
+    if (end - start > threshold) {
+      callback(true);
+    } else {
+      callback(false);
+    }
+  };
+  // Vérification périodique
+  check();
+  setInterval(check, 2000);
+};
+
+// ====================================================
+// 5. RATE LIMITING CÔTÉ CLIENT (pour éviter les abus)
+// ====================================================
+
 export class RateLimiter {
   private attempts: Map<string, { count: number; resetAt: number }> = new Map();
 
+  /**
+   * @param maxAttempts Nombre maximum de tentatives autorisées
+   * @param windowMs Fenêtre de temps en millisecondes
+   */
   constructor(
     private maxAttempts: number = 5,
     private windowMs: number = 60_000
   ) {}
 
+  /**
+   * Vérifie si une action est autorisée pour une clé donnée.
+   * @returns Objet avec allowed (booléen), remainingAttempts, retryAfterMs
+   */
   check(key: string): { allowed: boolean; remainingAttempts: number; retryAfterMs: number } {
     const now = Date.now();
     const entry = this.attempts.get(key);
@@ -50,65 +186,76 @@ export class RateLimiter {
     return { allowed: true, remainingAttempts: this.maxAttempts - entry.count, retryAfterMs: 0 };
   }
 
+  /** Réinitialise le compteur pour une clé */
   reset(key: string) {
     this.attempts.delete(key);
   }
 }
 
-// Validate email format
-export const isValidEmail = (email: string): boolean => {
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  return emailRegex.test(email) && email.length <= 255;
-};
+// ====================================================
+// 6. GÉNÉRATION DE NONCE POUR CSP
+// ====================================================
 
-// Generate a nonce for CSP
+/**
+ * 🔑 Génère un nonce aléatoire à utiliser dans les politiques CSP.
+ */
 export const generateNonce = (): string => {
   const array = new Uint8Array(16);
   crypto.getRandomValues(array);
   return btoa(String.fromCharCode(...array));
 };
 
-// Detect common injection patterns
-export const detectInjection = (input: string): boolean => {
-  const patterns = [
-    /(<script[\s>])/i,
-    /(union\s+select)/i,
-    /(drop\s+table)/i,
-    /(insert\s+into)/i,
-    /(delete\s+from)/i,
-    /(--\s*$)/,
-    /(\/\*.*\*\/)/,
-    /(\b(eval|exec|execute)\s*\()/i,
-  ];
-  return patterns.some((p) => p.test(input));
+// ====================================================
+// 7. FONCTIONS DE HAUT NIVEAU (APPLICATION GLOBALE)
+// ====================================================
+
+/**
+ * 🛡️ Active toutes les protections de base (à appeler dans main.tsx en production).
+ */
+export const enableSecurity = () => {
+  if (import.meta.env.PROD) {
+    preventFraming();
+    disableContextMenu();
+    disableTextSelection();
+    disableDevShortcuts();
+    detectDevTools((isOpen) => {
+      if (isOpen) {
+        console.warn('⚠️ DevTools détecté – soyez vigilant avec les données sensibles.');
+        // Optionnel : envoyer un événement au serveur
+      }
+    });
+  }
 };
 
-// Prevent right-click context menu (anti-copy)
-export const disableContextMenu = () => {
-  document.addEventListener('contextmenu', (e) => e.preventDefault());
+// ====================================================
+// 8. UTILITAIRES DIVERS
+// ====================================================
+
+/**
+ * 🧪 Valide une chaîne de caractères selon des règles strictes (sans chiffres, etc.)
+ * Peut être utilisé pour les noms, etc.
+ */
+export const isValidName = (name: string): boolean => {
+  return /^[a-zA-ZÀ-ÿ\s\-']{2,50}$/.test(name.trim());
 };
 
-// Prevent text selection (anti-copy) 
-export const disableTextSelection = () => {
-  document.addEventListener('selectstart', (e) => e.preventDefault());
+/**
+ * 📞 Valide un numéro de téléphone (format international simple).
+ */
+export const isValidPhone = (phone: string): boolean => {
+  return /^\+?[0-9]{8,15}$/.test(phone.replace(/[\s\-]/g, ''));
 };
 
-// Prevent keyboard shortcuts for copy/save/inspect
-export const disableDevShortcuts = () => {
-  document.addEventListener('keydown', (e) => {
-    // Ctrl+U (view source), Ctrl+S (save), Ctrl+Shift+I (devtools)
-    if (
-      (e.ctrlKey && e.key === 'u') ||
-      (e.ctrlKey && e.key === 's') ||
-      (e.ctrlKey && e.shiftKey && e.key === 'I') ||
-      (e.ctrlKey && e.shiftKey && e.key === 'J') ||
-      (e.ctrlKey && e.shiftKey && e.key === 'C') ||
-      e.key === 'F12'
-    ) {
-      e.preventDefault();
-    }
-  });
-};
+// ====================================================
+// 💡 CONSEILS & ORIENTATIONS
+// ====================================================
+// - Ce fichier doit être importé dans `main.tsx` et/ou utilisé dans les composants.
+// - Les fonctions de désactivation (contextmenu, selectstart) peuvent gêner l'expérience utilisateur.
+//   Activez-les uniquement sur les pages sensibles (paiement, admin).
+// - La détection DevTools n'est pas fiable à 100%, mais ajoute une couche de dissuasion.
+// - Pour une protection plus avancée, utilisez les en-têtes HTTP (CSP, X-Frame-Options) côté serveur.
+// - Le rate limiter est côté client ; il ne remplace pas une limitation serveur.
+// ====================================================};
 
 // Anti-iframe: prevent site from being embedded in iframes
 export const preventFraming = () => {
