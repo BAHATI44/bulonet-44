@@ -45,6 +45,7 @@ const App = () => (
               <Route path="/admin/markets" element={<MarketsPage />} />
               <Route path="/admin/currencies" element={<CurrenciesPage />} />
               <Route path="/admin/orders" element={<OrdersPage />} />
+              <Route path="/admin/ai-agents" element={<AIAgentsPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </StoreProvider>

@@ -32,6 +32,7 @@ const navItems = [
   { title: "Marchés", url: "/admin/markets", icon: Globe },
   { title: "Devises", url: "/admin/currencies", icon: Coins },
   { title: "Commandes", url: "/admin/orders", icon: ShoppingCart },
+  { title: "Agents IA", url: "/admin/ai-agents", icon: Zap },
 ];
 
 const AdminSidebar = () => {
