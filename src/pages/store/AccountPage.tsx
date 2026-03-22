@@ -30,11 +30,8 @@ const AccountPage = () => {
   const queryClient = useQueryClient();
   const [displayName, setDisplayName] = useState("");
 
-  useEffect(() => {
-    if (!loading && !user) navigate("/store/auth");
-  }, [loading, user, navigate]);
+  useEffect(() => { if (!loading && !user) navigate("/store/auth"); }, [loading, user, navigate]);
 
-  // Profile
   const { data: profile } = useQuery({
     queryKey: ["profile", user?.id],
     queryFn: async () => {
@@ -45,9 +42,7 @@ const AccountPage = () => {
     enabled: !!user,
   });
 
-  useEffect(() => {
-    if (profile?.display_name) setDisplayName(profile.display_name);
-  }, [profile]);
+  useEffect(() => { if (profile?.display_name) setDisplayName(profile.display_name); }, [profile]);
 
   const updateProfile = useMutation({
     mutationFn: async () => {
@@ -55,10 +50,9 @@ const AccountPage = () => {
       if (error) throw error;
     },
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["profile"] }); toast.success("Profil mis à jour"); },
-    onError: (e) => toast.error(e.message),
+    onError: (e: any) => toast.error(e.message),
   });
 
-  // Orders
   const { data: orders, isLoading: ordersLoading } = useQuery({
     queryKey: ["my-orders", user?.id],
     queryFn: async () => {
@@ -69,20 +63,20 @@ const AccountPage = () => {
     enabled: !!user,
   });
 
-  // Wishlist
+  // Wishlist - uses raw query since table may not be in types yet
   const { data: wishlist, isLoading: wishlistLoading } = useQuery({
     queryKey: ["wishlist", user?.id],
     queryFn: async () => {
-      const { data, error } = await supabase.from("wishlist_items").select("*, products(*)").eq("user_id", user!.id);
+      const { data, error } = await supabase.from("wishlist_items" as any).select("*, products(*)").eq("user_id", user!.id);
       if (error) throw error;
-      return data;
+      return data as any[];
     },
     enabled: !!user,
   });
 
   const removeWishlistItem = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from("wishlist_items").delete().eq("id", id);
+      const { error } = await supabase.from("wishlist_items" as any).delete().eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["wishlist"] }); toast.success("Retiré des favoris"); },
@@ -99,9 +93,7 @@ const AccountPage = () => {
             <h1 className="text-2xl font-bold text-foreground">Mon compte</h1>
             <p className="text-sm text-muted-foreground">{user.email}</p>
           </div>
-          <Button variant="outline" size="sm" className="gap-1.5" onClick={() => signOut()}>
-            <LogOut className="h-4 w-4" /> Déconnexion
-          </Button>
+          <Button variant="outline" size="sm" className="gap-1.5" onClick={() => signOut()}><LogOut className="h-4 w-4" /> Déconnexion</Button>
         </div>
 
         <Tabs defaultValue="orders" className="space-y-6">
@@ -122,10 +114,10 @@ const AccountPage = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                {orders.map((order) => {
+                {orders.map((order: any) => {
                   const status = statusLabels[order.status] ?? statusLabels.pending;
                   return (
-                    <div key={order.id} className="rounded-xl bg-card p-5 shadow-soft">
+                    <div key={order.id} className="rounded-xl bg-card p-5 shadow-sm">
                       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
                         <div className="flex items-center gap-3">
                           <span className="font-mono text-xs text-muted-foreground">{order.order_number}</span>
@@ -169,11 +161,7 @@ const AccountPage = () => {
                 {wishlist.map((item: any) => (
                   <div key={item.id} className="flex items-start gap-3 rounded-lg border border-border p-3 cursor-pointer hover:bg-secondary/50" onClick={() => navigate(`/store/product/${item.product_id}`)}>
                     <div className="h-16 w-16 shrink-0 overflow-hidden rounded-md bg-secondary">
-                      {item.products?.image_url ? (
-                        <img src={item.products.image_url} alt={item.products.name} className="h-full w-full object-cover" />
-                      ) : (
-                        <div className="flex h-full items-center justify-center text-muted-foreground"><Package className="h-6 w-6" /></div>
-                      )}
+                      {item.products?.image_url ? <img src={item.products.image_url} alt={item.products.name} className="h-full w-full object-cover" /> : <div className="flex h-full items-center justify-center text-muted-foreground"><Package className="h-6 w-6" /></div>}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium truncate">{item.products?.name}</p>
