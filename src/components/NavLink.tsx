@@ -14,7 +14,7 @@ const NavLink = forwardRef<HTMLAnchorElement, BulonetNavLinkProps>(
     if (isExternal) {
       return (
         <a ref={ref as React.ForwardedRef<HTMLAnchorElement>} href={to as string} target="_blank" rel="noopener noreferrer" className={className}>
-          {children}
+          {children as React.ReactNode}
         </a>
       );
     }
@@ -26,7 +26,7 @@ const NavLink = forwardRef<HTMLAnchorElement, BulonetNavLinkProps>(
         className={({ isActive }) => cn(className, isActive && activeClassName)}
         {...props}
       >
-        {children}
+        {(typeof children === 'function' ? undefined : children) as React.ReactNode}
       </RouterNavLink>
     );
   }

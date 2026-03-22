@@ -83,7 +83,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     })();
 
-    checkAdminPromise.current = promise;
+    checkAdminPromise.current = promise as any;
     const isAdminResult = await promise;
     checkAdminPromise.current = null;
     return isAdminResult;
